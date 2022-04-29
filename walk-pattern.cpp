@@ -15,7 +15,7 @@ double t = 0;   //
 double dt = 4.0 / 1000.0;
 double Tc,S,C;
 double xr,yr; //歩行素片
-double xd,yd; //目標状態
+double x_target,y_target,xd_target,yd_target; //目標状態
 double a = 10, b = 1; //評価関数の重み
 double D;
 
@@ -35,7 +35,7 @@ int main(){
                 x = (xi - astpx) * C + Tc * dxi * S + astpx;
                 y = (yi - astpx) * C + Tc * dyi * S + astpy;
 
-                data << t << " " << x << " " << y << std::endl;  //data.dat用
+                data << t << x << y << std::endl;  //data.dat用
                 
                 dx = (xi - astpx) / Tc * S + dxi * C;
                 dy = (yi - astpx) / Tc * S + dyi * C;
@@ -52,18 +52,18 @@ int main(){
         ppx = astpx;// astpxの更新
         ppy = astpy;// astpyの更新
         px = ppx + sx.at(step);
-        py = ppy + std::pow(-1,n) * sy.at(step);
+        py = ppy + std::pow(-1, n) * sy.at(step);
 //step6
         xr = sx.at(step) / 2;
-        yr = std::pow(-1 , n) * sy.at(step) / 2;
+        yr = std::pow(-1, n) * sy.at(step) / 2;
 //step7
-        xd = px + xr;
-        dxi = (C + 1) / (Tc * S) * xr;
-        yd = py + yr;
-        dyi = (C + 1) / (Tc * S) * yr;
+        x_target = px + xr;
+        xd_target = (C + 1) / (Tc * S) * xr;
+        y_target = py + yr;
+        yd_target = (C + 1) / (Tc * S) * yr;
 //step8
         D = a * (C -1) * (C - 1) + b * (S / Tc) * (S /Tc);
-        astpx = -a * (C - 1) / D * (xd - C * xi - Tc * S * dxi) - b * S / (Tc * D) * (dxi - S / Tc * xi - C * dxi);
-        astpy = -a * (C - 1) / D * (yd - C  * yi - Tc * S * dyi) - b * S / (Tc * D) * (dyi - S / Tc * yi - C * dyi);
+        astpx = -a * (C - 1) / D * (x_target - C * xi - Tc * S * dxi) - b * S / (Tc * D) * (xd_target - S * xi / Tc - C * dxi);
+        astpy = -a * (C - 1) / D * (y_target - C  * yi - Tc * S * dyi) - b * S / (Tc * D) * (yd_target - S * yi / Tc - C * dyi);
     }
 }
